@@ -1,18 +1,21 @@
 package GUIProjekt.View;
 
 import java.awt.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
-import javax.swing.JPanel.*;
-
 public class CyberMysteryPanel extends JPanel {
-    private JButton mysterybtn, quizbtn, verwaltungsbtn, exitbtn, continuebtn, backtomenu;
+    private JButton mysterybtn, quizbtn, verwaltungsbtn, exitbtn;
+    private JButton continuebtn, backtomenu;
     private JLabel header;
     private JPanel start;
-    public CyberMysteryPanel(){
+    private JPanel quizPanel;
+    public CyberMysteryPanel() {
+        this.setLayout(new BorderLayout());
+        // Hauptmenü
         start = new JPanel();
         start.setLayout(new BoxLayout(start, BoxLayout.PAGE_AXIS));
-
-        this.setLayout(new BorderLayout());
+        start.setBackground(new Color(59, 77, 102));
         mysterybtn = new JButton("Mystery");
         quizbtn = new JButton("Quiz");
         verwaltungsbtn = new JButton("Verwaltung");
@@ -22,38 +25,35 @@ public class CyberMysteryPanel extends JPanel {
         header = new JLabel("CYBER MYSTERY");
         Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 32);
         mysterybtn.setActionCommand("Mystery");
-        mysterybtn.setFont(buttonFont);
         quizbtn.setActionCommand("Quiz");
-        quizbtn.setFont(buttonFont);
         verwaltungsbtn.setActionCommand("Verwaltung");
-        verwaltungsbtn.setFont(buttonFont);
         exitbtn.setActionCommand("Beenden");
+        mysterybtn.setFont(buttonFont);
+        quizbtn.setFont(buttonFont);
+        verwaltungsbtn.setFont(buttonFont);
         exitbtn.setFont(buttonFont);
-        continuebtn.setActionCommand("Fortsetzen");
-        backtomenu.setActionCommand("Zurück zum Menü");
         header.setFont(new Font(Font.MONOSPACED, Font.BOLD, 112));
-        header.setForeground(new Color(238,238,238));
+        header.setForeground(new Color(238, 238, 238));
         header.setAlignmentX(Component.CENTER_ALIGNMENT);
         mysterybtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         quizbtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         verwaltungsbtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitbtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        start.setAlignmentY(Component.CENTER_ALIGNMENT);
         int buttonwidth = 400;
         int buttonheight = 80;
-        Color buttonColor = new Color(255,255,255);
+        Color buttonColor = new Color(255, 255, 255);
         mysterybtn.setPreferredSize(new Dimension(buttonwidth, buttonheight));
-        mysterybtn.setBackground(buttonColor);
-        quizbtn.setPreferredSize(new Dimension(buttonwidth,buttonheight));
-        quizbtn.setBackground(buttonColor);
-        verwaltungsbtn.setPreferredSize(new Dimension(buttonwidth,buttonheight));
-        verwaltungsbtn.setBackground(buttonColor);
+        quizbtn.setPreferredSize(new Dimension(buttonwidth, buttonheight));
+        verwaltungsbtn.setPreferredSize(new Dimension(buttonwidth, buttonheight));
         exitbtn.setPreferredSize(new Dimension(buttonwidth, buttonheight));
+        mysterybtn.setMaximumSize(new Dimension(buttonwidth, buttonheight));
+        quizbtn.setMaximumSize(new Dimension(buttonwidth, buttonheight));
+        verwaltungsbtn.setMaximumSize(new Dimension(buttonwidth, buttonheight));
+        exitbtn.setMaximumSize(new Dimension(buttonwidth, buttonheight));
+        mysterybtn.setBackground(buttonColor);
+        quizbtn.setBackground(buttonColor);
+        verwaltungsbtn.setBackground(buttonColor);
         exitbtn.setBackground(buttonColor);
-        mysterybtn.setMaximumSize(new Dimension(buttonwidth,buttonheight));
-        quizbtn.setMaximumSize(new Dimension(buttonwidth,buttonheight));
-        verwaltungsbtn.setMaximumSize(new Dimension(buttonwidth,buttonheight));
-        exitbtn.setMaximumSize(new Dimension(buttonwidth,buttonheight));
         start.add(Box.createVerticalGlue());
         start.add(header);
         start.add(Box.createVerticalStrut(100));
@@ -66,9 +66,46 @@ public class CyberMysteryPanel extends JPanel {
         start.add(exitbtn);
         start.add(Box.createVerticalGlue());
         this.add(start, BorderLayout.CENTER);
-        start.setBackground(new Color(59,77,102));
     }
-    public void quizGame(){
-
+    public void quizGame(int points) {
+        points = 0;
+        // Menü verstecken
+        start.setVisible(false);
+        quizPanel = new JPanel(new BorderLayout());
+        // Obere Anzeige
+        JPanel anzeigeOben = new JPanel(new GridLayout(1, 2));
+        JPanel punkteAnzeige = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel punkte = new JLabel("Punkte: " + points);
+        punkteAnzeige.add(punkte);
+        JPanel zeitAnzeige = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        JLabel time = new JLabel("Zeit: " + LocalTime.now().format(formatter));
+        zeitAnzeige.add(time);
+        anzeigeOben.add(punkteAnzeige);
+        anzeigeOben.add(zeitAnzeige);
+        // Uhrzeit jede Sekunde aktualisieren
+        Timer timer = new Timer(1000, e -> {
+            time.setText("Zeit: " + LocalTime.now().format(formatter));
+        });
+        timer.start();
+        // Zurück-Button
+        backtomenu.setActionCommand("Zurück zum Menü");
+        JPanel unten = new JPanel();
+        unten.add(backtomenu);
+        quizPanel.add(anzeigeOben, BorderLayout.NORTH);
+        quizPanel.add(unten, BorderLayout.SOUTH);
+        this.add(quizPanel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    public void menue() {
+        // Quiz entfernen
+        if (quizPanel != null) {
+            this.remove(quizPanel);
+        }
+        // Menü wieder anzeigen
+        start.setVisible(true);
+        this.revalidate();
+        this.repaint();
     }
 }
