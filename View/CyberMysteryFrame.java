@@ -1,6 +1,7 @@
 package GUIProjekt.View;
-
+import javax.print.attribute.standard.Media;
 import javax.swing.*;
+import java.io.File;
 public class CyberMysteryFrame extends JFrame {
     public CyberMysteryFrame(){
         this.add(new CyberMysteryPanel());
@@ -9,7 +10,6 @@ public class CyberMysteryFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
-
     static void main() {
         new CyberMysteryFrame();
     }
