@@ -10,10 +10,21 @@ public class CyberMysteryPanel extends JPanel {
     private JLabel header;
     private JPanel start;
     private JPanel quizPanel;
+    private String aktuelleFrage;
+    private JLabel frage;
+    private JPanel frageAnzeige;
+    private JTextField eingabe;
+    private int points=0;
+    private JLabel punkte;
+    private JLabel time;
     public CyberMysteryPanel() {
         this.setLayout(new BorderLayout());
         // Hauptmenü
         start = new JPanel();
+        this.frageAnzeige = new JPanel();
+        frage = new JLabel();
+        this.frageAnzeige.setVisible(false);
+        this.frage.setFont(new Font(Font.MONOSPACED,Font.BOLD,30));
         start.setLayout(new BoxLayout(start, BoxLayout.PAGE_AXIS));
         start.setBackground(new Color(59, 77, 102));
         mysterybtn = new JButton("Mystery");
@@ -67,34 +78,40 @@ public class CyberMysteryPanel extends JPanel {
         start.add(Box.createVerticalGlue());
         this.add(start, BorderLayout.CENTER);
     }
-    public void quizGame(int points) {
-        points = 0;
+    public void quizGame(){
+        this.points = 0;
         // Menü verstecken
         start.setVisible(false);
-        quizPanel = new JPanel(new BorderLayout());
+        quizPanel=new JPanel(new BorderLayout());
         // Obere Anzeige
-        JPanel anzeigeOben = new JPanel(new GridLayout(1, 2));
-        JPanel punkteAnzeige = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel punkte = new JLabel("Punkte: " + points);
+        JPanel anzeigeOben=new JPanel(new GridLayout(1,2));
+        JPanel punkteAnzeige=new JPanel(new FlowLayout(FlowLayout.LEFT));
+        punkte=new JLabel("Punkte: "+points);
         punkteAnzeige.add(punkte);
-        JPanel zeitAnzeige = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        JLabel time = new JLabel("Zeit: " + LocalTime.now().format(formatter));
+        JPanel zeitAnzeige=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("HH:mm:ss");
+        time=new JLabel("Zeit: "+LocalTime.now().format(formatter));
         zeitAnzeige.add(time);
         anzeigeOben.add(punkteAnzeige);
         anzeigeOben.add(zeitAnzeige);
         // Uhrzeit jede Sekunde aktualisieren
-        Timer timer = new Timer(1000, e -> {
-            time.setText("Zeit: " + LocalTime.now().format(formatter));
+        Timer timer=new Timer(1000,e->{
+            time.setText("Zeit: "+LocalTime.now().format(formatter));
         });
+        this.frageAnzeige.setVisible(true);
+        frageAnzeige.setLayout(new GridLayout(1,1));
+        frage.setText(this.aktuelleFrage);
+        this.eingabe=new JTextField();
+        frageAnzeige.add(frage);
         timer.start();
         // Zurück-Button
         backtomenu.setActionCommand("Zurück zum Menü");
-        JPanel unten = new JPanel();
+        JPanel unten=new JPanel();
         unten.add(backtomenu);
-        quizPanel.add(anzeigeOben, BorderLayout.NORTH);
-        quizPanel.add(unten, BorderLayout.SOUTH);
-        this.add(quizPanel, BorderLayout.CENTER);
+        quizPanel.add(anzeigeOben,BorderLayout.NORTH);
+        quizPanel.add(unten,BorderLayout.SOUTH);
+        quizPanel.add(frageAnzeige,BorderLayout.CENTER);
+        this.add(quizPanel);
         this.revalidate();
         this.repaint();
     }
@@ -107,5 +124,11 @@ public class CyberMysteryPanel extends JPanel {
         start.setVisible(true);
         this.revalidate();
         this.repaint();
+    }
+    public void setAktuelleFrage(String aktuelleFrage){
+        this.aktuelleFrage = aktuelleFrage;
+    }
+    public String getAktuelleFrage(){
+        return this.aktuelleFrage;
     }
 }
