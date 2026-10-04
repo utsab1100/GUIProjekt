@@ -10,11 +10,9 @@ public class CyberMysteryPanel extends JPanel {
     private JLabel header;
     private JPanel start;
     private JPanel quizPanel;
-    private String aktuelleFrage;
     private JLabel frage;
     private JPanel frageAnzeige;
     private JTextField eingabe;
-    private int points=0;
     private JLabel punkte;
     private JLabel time;
     public CyberMysteryPanel() {
@@ -31,7 +29,7 @@ public class CyberMysteryPanel extends JPanel {
         quizbtn = new JButton("Quiz");
         verwaltungsbtn = new JButton("Verwaltung");
         exitbtn = new JButton("Beenden");
-        continuebtn = new JButton("Fortsetzen");
+        continuebtn = new JButton("Antwort prüfen");
         backtomenu = new JButton("Zurück zum Menü");
         header = new JLabel("CYBER MYSTERY");
         Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 32);
@@ -39,6 +37,7 @@ public class CyberMysteryPanel extends JPanel {
         quizbtn.setActionCommand("Quiz");
         verwaltungsbtn.setActionCommand("Verwaltung");
         exitbtn.setActionCommand("Beenden");
+        continuebtn.setActionCommand("Antwort prüfen");
         mysterybtn.setFont(buttonFont);
         quizbtn.setFont(buttonFont);
         verwaltungsbtn.setFont(buttonFont);
@@ -78,40 +77,83 @@ public class CyberMysteryPanel extends JPanel {
         start.add(Box.createVerticalGlue());
         this.add(start, BorderLayout.CENTER);
     }
+    public JButton getMysterybtn() {
+        return mysterybtn;
+    }
+    public JButton getQuizbtn() {
+        return quizbtn;
+    }
+    public JButton getVerwaltungsbtn() {
+        return verwaltungsbtn;
+    }
+    public JButton getExitbtn() {
+        return exitbtn;
+    }
+
+    public JButton getContinuebtn() {
+        return continuebtn;
+    }
+    public JButton getBacktomenu() {
+        return backtomenu;
+    }
     public void quizGame(){
-        this.points = 0;
         // Menü verstecken
         start.setVisible(false);
         quizPanel=new JPanel(new BorderLayout());
+        quizPanel.setBackground(new Color(57,158,207));
         // Obere Anzeige
-        JPanel anzeigeOben=new JPanel(new GridLayout(1,2));
+        JPanel anzeigeOben=new JPanel(new BorderLayout());
+        anzeigeOben.setBorder(BorderFactory.createEmptyBorder(15,25,15,25));
+        anzeigeOben.setBackground(new Color(236,246,249));
         JPanel punkteAnzeige=new JPanel(new FlowLayout(FlowLayout.LEFT));
-        punkte=new JLabel("Punkte: "+points);
+        punkte=new JLabel("Punkte: 0");
+        punkte.setFont(new Font(Font.SANS_SERIF,Font.BOLD,24));
+        punkte.setForeground(Color.BLACK);
         punkteAnzeige.add(punkte);
         JPanel zeitAnzeige=new JPanel(new FlowLayout(FlowLayout.RIGHT));
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("HH:mm:ss");
         time=new JLabel("Zeit: "+LocalTime.now().format(formatter));
-        zeitAnzeige.add(time);
-        anzeigeOben.add(punkteAnzeige);
-        anzeigeOben.add(zeitAnzeige);
+        time.setFont(new Font(Font.SANS_SERIF,Font.BOLD,24));
+        time.setForeground(Color.BLACK);
+        anzeigeOben.add(punkte,BorderLayout.WEST);
+        anzeigeOben.add(zeitAnzeige,BorderLayout.EAST);
         // Uhrzeit jede Sekunde aktualisieren
         Timer timer=new Timer(1000,e->{
             time.setText("Zeit: "+LocalTime.now().format(formatter));
         });
-        this.frageAnzeige.setVisible(true);
-        frageAnzeige.setLayout(new GridLayout(1,1));
-        frage.setText(this.aktuelleFrage);
-        this.eingabe=new JTextField();
-        frageAnzeige.add(frage);
         timer.start();
+        this.frageAnzeige.setVisible(true);
+        frageAnzeige.setLayout(new BoxLayout(frageAnzeige,BoxLayout.Y_AXIS));
+        frageAnzeige.setBackground(new Color(59,77,102));
+        frageAnzeige.setBorder(BorderFactory.createEmptyBorder(80,100,40,100));
+        frage.setFont(new Font(Font.SANS_SERIF,Font.BOLD,32));
+        frage.setForeground(Color.BLACK);
+        frage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.eingabe=new JTextField();
+        frageAnzeige.removeAll();
+        eingabe.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,24));
+        eingabe.setMaximumSize(new Dimension(700,60));
+        eingabe.setAlignmentX(Component.CENTER_ALIGNMENT);
+        continuebtn.setFont(new Font(Font.SANS_SERIF,Font.BOLD,22));
+        continuebtn.setSize(new Dimension(250,60));
+        continuebtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        frageAnzeige.add(Box.createVerticalGlue());
+        frageAnzeige.add(frage);
+        frageAnzeige.add(Box.createVerticalStrut(50));
+        frageAnzeige.add(eingabe);
+        frageAnzeige.add(Box.createVerticalStrut(30));
+        frageAnzeige.add(continuebtn);
+        frageAnzeige.add(Box.createVerticalGlue());
         // Zurück-Button
         backtomenu.setActionCommand("Zurück zum Menü");
-        JPanel unten=new JPanel();
+        backtomenu.setFont(new Font(Font.SANS_SERIF,Font.BOLD,18));
+        JPanel unten=new JPanel(new FlowLayout(FlowLayout.CENTER));
+        unten.setBackground(new Color(236,246,249));
         unten.add(backtomenu);
         quizPanel.add(anzeigeOben,BorderLayout.NORTH);
         quizPanel.add(unten,BorderLayout.SOUTH);
         quizPanel.add(frageAnzeige,BorderLayout.CENTER);
-        this.add(quizPanel);
+        this.add(quizPanel, BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }
@@ -120,15 +162,21 @@ public class CyberMysteryPanel extends JPanel {
         if (quizPanel != null) {
             this.remove(quizPanel);
         }
+        if(eingabe!=null){
+            eingabe.setText("");
+        }
         // Menü wieder anzeigen
         start.setVisible(true);
         this.revalidate();
         this.repaint();
     }
     public void setAktuelleFrage(String aktuelleFrage){
-        this.aktuelleFrage = aktuelleFrage;
+        this.frage.setText(aktuelleFrage);
     }
-    public String getAktuelleFrage(){
-        return this.aktuelleFrage;
+    public void setPunkte(int punkte){
+        this.punkte.setText("Punkte: " + punkte);
+    }
+    public String getEingabe(){
+        return eingabe.getText();
     }
 }
