@@ -103,7 +103,6 @@ public class CyberMysteryPanel extends JPanel {
         quizPanel.setBackground(new Color(57,158,207));
         // Obere Anzeige
         JPanel anzeigeOben=new JPanel(new BorderLayout());
-        anzeigeOben.setBorder(BorderFactory.createEmptyBorder(15,25,15,25));
         anzeigeOben.setBackground(new Color(236,246,249));
         JPanel punkteAnzeige=new JPanel(new FlowLayout(FlowLayout.LEFT));
         punkte=new JLabel("Punkte: 0");
@@ -125,7 +124,6 @@ public class CyberMysteryPanel extends JPanel {
         this.frageAnzeige.setVisible(true);
         frageAnzeige.setLayout(new BoxLayout(frageAnzeige,BoxLayout.Y_AXIS));
         frageAnzeige.setBackground(new Color(59,77,102));
-        frageAnzeige.setBorder(BorderFactory.createEmptyBorder(80,100,40,100));
         frage.setFont(new Font(Font.SANS_SERIF,Font.BOLD,32));
         frage.setForeground(Color.BLACK);
         frage.setAlignmentX(Component.CENTER_ALIGNMENT);
