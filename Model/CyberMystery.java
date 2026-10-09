@@ -17,14 +17,20 @@ public class CyberMystery {
         this.falscheAntworten = 0;
         this.hinweisFreigeschaltet = false;
         this.fragen = new String[]{
-                "Wofür wird eine Firewall verwendet?",
-                "Was bedeutet die Abkürzung MFA",
-                "Was ist ein Computervirus"
+                "Wie nennt man den Angriff, durch gefälschte Emails das Passwort zu stehlen?", //1.Frage
+                "Was bedeutet die Abkürzung MFA", //2.Frage
+                "Welche Sicherheitsmaßnahme blockiert unerlaubte Eindringen und \nschützt die Netzwerksicherheit?",//3.Frage
+                "Wie nennt man den Schadtsoftware, die die Dateien verschlüsselt \nund Lösegeld fordert?",//4.Frage
+                "Wie nennt man die Manipulation, \num in die vertrauten Daten der Menschen zu gelangen",//5.Frage
+                "Was bedeutet DDoS"//6.Frage
         };
         this.richtigeAntworten = new String[]{
-                "Zum Schutz vor unerlaubten Netzwerkzugriffen",
-                "Multi-Faktor-Authentifizierung",
-                "Ein schädliches Programm"
+                "Phishing",//1. Antwort
+                "Multi-Faktor-Authentifizierung",//2. Antwort
+                "Firewall",//3. Antwort
+                "Ransomware",//4. Antwort
+                "Social-Engineering",//5. Antwort
+                "Distributed-Denial-of-Service"//6. Antwort
         };
     }
     public int getPunkte() {

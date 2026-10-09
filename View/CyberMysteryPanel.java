@@ -15,11 +15,14 @@ public class CyberMysteryPanel extends JPanel {
     private JTextField eingabe;
     private JLabel punkte;
     private JLabel time;
+    private JPanel anzeigeOben;
+    private JPanel unten;
     public CyberMysteryPanel() {
         this.setLayout(new BorderLayout());
         // Hauptmenü
         start = new JPanel();
         this.frageAnzeige = new JPanel();
+        this.anzeigeOben = new JPanel(new BorderLayout());
         frage = new JLabel();
         this.frageAnzeige.setVisible(false);
         this.frage.setFont(new Font(Font.MONOSPACED,Font.BOLD,30));
@@ -102,7 +105,6 @@ public class CyberMysteryPanel extends JPanel {
         quizPanel=new JPanel(new BorderLayout());
         quizPanel.setBackground(new Color(57,158,207));
         // Obere Anzeige
-        JPanel anzeigeOben=new JPanel(new BorderLayout());
         anzeigeOben.setBackground(new Color(236,246,249));
         JPanel punkteAnzeige=new JPanel(new FlowLayout(FlowLayout.LEFT));
         punkte=new JLabel("Punkte: 0");
@@ -145,7 +147,7 @@ public class CyberMysteryPanel extends JPanel {
         // Zurück-Button
         backtomenu.setActionCommand("Zurück zum Menü");
         backtomenu.setFont(new Font(Font.SANS_SERIF,Font.BOLD,18));
-        JPanel unten=new JPanel(new FlowLayout(FlowLayout.CENTER));
+        unten=new JPanel(new FlowLayout(FlowLayout.CENTER));
         unten.setBackground(new Color(236,246,249));
         unten.add(backtomenu);
         quizPanel.add(anzeigeOben,BorderLayout.NORTH);
@@ -173,6 +175,15 @@ public class CyberMysteryPanel extends JPanel {
     }
     public void setPunkte(int punkte){
         this.punkte.setText("Punkte: " + punkte);
+    }
+    public void farbeAenderung(boolean richtig){
+        if(richtig){
+            anzeigeOben.setBackground(Color.GREEN);
+            unten.setBackground(Color.GREEN);
+        } else {
+            anzeigeOben.setBackground(Color.RED);
+            unten.setBackground(Color.RED);
+        }
     }
     public String getEingabe(){
         return eingabe.getText();

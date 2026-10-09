@@ -29,8 +29,10 @@ public class CyberMysteryControl implements ActionListener {
         } else if(ac.equals("Antwort prüfen")){
             if(this.model.antwortPruefen(this.view.getEingabe())){
                 this.model.richtigeAntwort();
+                this.view.farbeAenderung(true);
             } else{
                 this.model.falscheAntwort();
+                this.view.farbeAenderung(false);
             }
             this.model.naechsteFrage();
             this.view.setAktuelleFrage(this.model.getAktuelleFrage());
