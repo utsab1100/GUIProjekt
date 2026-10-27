@@ -1,12 +1,26 @@
 package GUIProjekt.Model;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class VerwaltungFrageVerwalten {
+/**
+ * Verwaltet Fragen, die in einer Textdatei gespeichert sind.
+ *
+ * Die Klasse ermöglicht das Einlesen, Hinzufügen und Löschen
+ * von Fragen. Die Fragen werden intern in einem Array gehalten
+ * und bei jedem Lesezugriff aus der Datei neu eingelesen.
+ *
+ * Die Fragen in der Datei müssen durch zwei Leerzeichen
+ * voneinander getrennt sein. Zeilenumbrüche werden beim
+ * Einlesen entfernt.
+ *
+ * Zusätzlich kann ein Standardpfad für die Fragendatei
+ * festgelegt werden, sodass Methoden ohne Dateiparameter
+ * verwendet werden können.
+ */
+public class FrageVerwaltung {
     private static String[] frageListe;
     private static String standardURL = "assets/Fragen";
 
@@ -116,7 +130,7 @@ public class VerwaltungFrageVerwalten {
     static void main() {
         try {
             System.out.println(getFrage(1, "assets/Fragen"));
-            deleteFrage(5);
+            addFrage("neue Frage");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -127,6 +141,6 @@ public class VerwaltungFrageVerwalten {
     }
 
     public static void setStandardURL(String standardURL) {
-        VerwaltungFrageVerwalten.standardURL = standardURL;
+        FrageVerwaltung.standardURL = standardURL;
     }
 }
