@@ -11,9 +11,10 @@ public class VerwaltungFrageVerwalten {
     private static String standardURL = "assets/Fragen";
 
     /**
-     * Liest alle Fragen aus der angegebenen Datei ein und speichert sie
-     * in einem Array. Die einzelnen Fragen müssen durch die Zeichenfolge
-     * "  " gefolgt von einem Zeilenumbruch getrennt sein.
+     * Liest alle Fragen aus der angegebenen Datei ein und aktualisiert
+     * die interne Fragenliste. Vor dem Aufteilen werden sämtliche
+     * Zeilenumbrüche entfernt. Die einzelnen Fragen müssen in der Datei
+     * durch zwei Leerzeichen getrennt sein.
      *
      * @param fileURL Pfad zur Datei mit den Fragen
      * @throws IOException Falls die Datei nicht gelesen werden kann
