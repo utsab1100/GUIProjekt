@@ -1,4 +1,5 @@
 package GUIProjekt.Model;
+import java.io.*;
 public class CyberMystery {
     private int punkte;
     private int leben;
@@ -131,5 +132,74 @@ public class CyberMystery {
     }
     public int getAnzahlBildfragen(){
         return bildfragen.length;
+    }
+    public void datenSpeichern() {
+        try {
+            FileWriter write = new FileWriter("daten.txt");
+            PrintWriter ausgabe = new PrintWriter(write);
+            // Textfragen speichern
+            ausgabe.println("[TEXTFRAGEN]");
+            for (int i = 0; i < fragen.length; i++) {
+                ausgabe.println("FRAGE: " + fragen[i]);
+                ausgabe.println("ANTWORT: " + richtigeAntworten[i]);
+                ausgabe.println();
+            }
+            // Bildfragen speichern
+            ausgabe.println("[BILDFRAGEN]");
+            for (int i = 0; i < bildfragen.length; i++) {
+                ausgabe.println("FRAGE: " + bildfragen[i]);
+                ausgabe.println("ANTWORT: " + richtigeBildfragen[i]);
+                ausgabe.println();
+            }
+            ausgabe.close();
+            System.out.println("Daten wurden gespeichert.");
+        } catch (IOException e) {
+            System.out.println("Fehler beim Speichern: " + e.getMessage());
+        }
+    }
+    public String[] getFragen() {
+        return fragen;
+    }
+    public String[] getRichtigeAntworten() {
+        return richtigeAntworten;
+    }
+    public String[] getBildfragen() {
+        return bildfragen;
+    }
+    public String[] getRichtigeBildfragen() {
+        return richtigeBildfragen;
+    }
+    public void frageHinzufuegen(String frage, String antwort){
+        String[] neueFragen = new String[this.fragen.length + 1];
+        String[] neueAntworten = new String[this.richtigeAntworten.length + 1];
+        for (int i = 0; i < this.fragen.length; i++) {
+            neueFragen[i] = this.fragen[i];
+            neueAntworten[i] = this.richtigeAntworten[i];
+        }
+        neueFragen[this.fragen.length] = frage;
+        neueAntworten[this.richtigeAntworten.length] = antwort;
+        fragen = neueFragen;
+        richtigeAntworten = neueAntworten;
+    }
+    public void frageBearbeiten(int nummer, String frage, String antwort){
+        this.fragen[nummer] = frage;
+        this.richtigeAntworten[nummer] = antwort;
+    }
+    public void frageLoeschen(int nummer){
+        if(nummer < 0 || nummer >= this.fragen.length){
+            return;
+        }
+        String neueFragen[] = new String[this.fragen.length-1];
+        String neueAntworten[] = new String[this.richtigeAntworten.length-1];
+        for(int i = 0; i < nummer; i++){
+            neueFragen[i] = this.fragen[i];
+            neueAntworten[i] = this.richtigeAntworten[i];
+        }
+        for (int i = nummer; i < neueFragen.length; i++) {
+            neueFragen[i] = this.fragen[i+1];
+            neueAntworten[i] = this.richtigeAntworten[i+1];
+        }
+        this.fragen = neueFragen;
+        this.richtigeAntworten = neueAntworten;
     }
 }
