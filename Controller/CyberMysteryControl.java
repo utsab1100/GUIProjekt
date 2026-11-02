@@ -5,8 +5,6 @@ import GUIProjekt.View.CyberMysteryPanel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.*;
-import java.sql.SQLOutput;
-
 public class CyberMysteryControl implements ActionListener {
     private CyberMystery model;
     private CyberMysteryPanel view;

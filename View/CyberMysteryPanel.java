@@ -333,23 +333,7 @@ public class CyberMysteryPanel extends JPanel {
         this.repaint();
     }
     public void fallErklaerung(ActionListener listener){
-        this.removeAll();
-        fall = new JPanel(new BorderLayout(10,10));
-        startBtn = new JButton("Ermittlung starten");
-        JLabel header = new JLabel("Der Cyberangriff");
-        header.setFont(new Font(Font.DIALOG_INPUT,Font.BOLD,28));
-        fall.add(header, BorderLayout.PAGE_START);
-        JTextArea beschreibung = new JTextArea("Am Montagmorgen funktioniert das Schulnetzwerk plötzlich nicht mehr richtig. " + "Die IT-Abteilung entdeckt Hinweise auf mehrere Cyberangriffe. Deine Aufgabe ist es, den Täter zu finden.");
-        beschreibung.setEditable(false);
-        beschreibung.setLineWrap(true);
-        beschreibung.setWrapStyleWord(true);
-        startBtn.setActionCommand("Ermittlung starten");
-        startBtn.addActionListener(listener);
-        fall.add(beschreibung,BorderLayout.CENTER);
-        fall.add(startBtn,BorderLayout.PAGE_END);
-        this.add(fall);
-        this.revalidate();
-        this.repaint();
+
     }
     // Erstellung der Verwaltung
     public void verwaltung(String[] fragen, String[] antworten, String[] bildfragen, String[] bildantworten, ActionListener controller) {
