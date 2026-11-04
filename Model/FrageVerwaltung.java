@@ -178,7 +178,7 @@ public class FrageVerwaltung {
         try {
             System.out.println(getFrageListe("assets/Fragen")[0]);
             System.out.println(getFrageListe("assets/Fragen")[1]);
-            addFrage("neue Frage", "eine Antwort");
+            addFrage("neue Frage", "eine Antwort ");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
