@@ -1,5 +1,6 @@
 package GUIProjekt.Model;
 import java.io.*;
+import java.util.*;
 public class CyberMystery {
     private int punkte;
     private int leben;
@@ -71,6 +72,10 @@ public class CyberMystery {
         return fragen[aktuelleFrage];
     }
     public boolean antwortPruefen(String antwort){
+        if(this.richtigeAntworten.length == 0){
+            System.out.println("Keine Antworten vorhanden!");
+            return false;
+        }
         return this.richtigeAntworten[this.aktuelleFrage].equalsIgnoreCase(antwort.trim());
     }
     public boolean antwortPruefenBild(String antwort){
@@ -185,6 +190,10 @@ public class CyberMystery {
         this.fragen[nummer] = frage;
         this.richtigeAntworten[nummer] = antwort;
     }
+    public void bildfrageBearbeiten(int nummer, String frage, String antwort){
+        this.fragen[nummer] = frage;
+        this.richtigeAntworten[nummer] = antwort;
+    }
     public void frageLoeschen(int nummer){
         if(nummer < 0 || nummer >= this.fragen.length){
             return;
@@ -201,5 +210,50 @@ public class CyberMystery {
         }
         this.fragen = neueFragen;
         this.richtigeAntworten = neueAntworten;
+    }
+    public void datenLaden(){
+        try{
+            Scanner scanner = new Scanner(new File("daten.txt"));
+            this.fragen = new String[0];
+            this.richtigeAntworten = new String[0];
+            boolean textFragen = false;
+            while(scanner.hasNextLine()){
+                String zeile = scanner.nextLine();
+                if(zeile.equals("[TEXTFRAGEN]")){
+                    textFragen = true;
+                } else if(zeile.equals("[BILDFRAGEN]")){
+                    textFragen = false;
+                } else if(textFragen && zeile.startsWith("FRAGE: ")){
+                    String frage = zeile.substring(7);
+                    String antwortZeile = scanner.nextLine();
+                    String antwort = antwortZeile.substring(9);
+                    System.out.println("Frage geladen: " + frage);
+                    System.out.println("Antwort geladen: " + antwort);
+                    frageHinzufuegen(frage, antwort);
+                }
+            }
+            System.out.println("Geladene Fragen: " + fragen.length);
+            scanner.close();
+            System.out.println("Daten wurden geladen!");
+        } catch(IOException e){
+            System.out.println("Fehler beim Laden!");
+        }
+        if (fragen.length > 0) {
+            System.out.println("Erste Frage: " + fragen[0]);
+        } else {
+            System.out.println("Es wurden keine Fragen geladen!");
+        }
+    }
+    public void bildfragenHinzufuegen(String frage, String antwort){
+        String[] neueFragen = new String[bildfragen.length+1];
+        String[] neueAntworten = new String[richtigeBildfragen.length+1];
+        for (int i = 0; i < bildfragen.length; i++) {
+            neueFragen[i] = this.bildfragen[i];
+            neueAntworten[i] = this.richtigeBildfragen[i];
+        }
+        neueFragen[this.bildfragen.length] = frage;
+        neueAntworten[this.richtigeBildfragen.length] = antwort;
+        this.bildfragen = neueFragen;
+        this.richtigeBildfragen = neueAntworten;
     }
 }

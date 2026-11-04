@@ -371,10 +371,10 @@ public class CyberMysteryPanel extends JPanel {
             loeschenBtn.addActionListener(controller);
             final int nummer = i;
             bearbeitenBtn.addActionListener(e -> {
-                bearbeiteteFrage = nummer;
-                frageEingabe.setText(fragen[nummer]);
-                antwortEingabe.setText(antworten[nummer]);
-                speicheBtn.setText("Änderungen speichern");
+                this.bearbeiteteFrage = nummer;
+                this.frageEingabe.setText(fragen[nummer]);
+                this.antwortEingabe.setText(antworten[nummer]);
+                this.speicheBtn.setText("Änderungen speichern");
             });
             JPanel buttonPanel = new JPanel();
             buttonPanel.add(bearbeitenBtn);
@@ -385,6 +385,7 @@ public class CyberMysteryPanel extends JPanel {
         }
         // Bildfragen anzeigen
         for (int i = 0; i < bildfragen.length; i++) {
+            final int nummer = i;
             JPanel fragePanel = new JPanel(new BorderLayout(10, 5));
             JTextArea frageLabel = new JTextArea("Bildfrage: " + bildfragen[i] + "\nAntwort: " + bildantworten[i]);
             frageLabel.setEditable(false);
@@ -393,6 +394,19 @@ public class CyberMysteryPanel extends JPanel {
             JButton bearbeitenBtn = new JButton("Bearbeiten");
             bearbeitenBtn.setActionCommand("Bildfrage bearbeiten:" + i);
             buttonsGestalten(bearbeitenBtn);
+            bearbeitenBtn.addActionListener(e->{
+                this.bearbeiteteFrage = nummer;
+                this.frageEingabe.setText(bildfragen[nummer]);
+                this.antwortEingabe.setText(bildantworten[nummer]);
+                this.speicheBtn.setText("Bildfrage ändern");
+            });
+            JButton loeschenBtn = new JButton("Löschen");
+            loeschenBtn.setActionCommand("Bildfrage löschen:"+i);
+            buttonsGestalten(loeschenBtn);
+            loeschenBtn.addActionListener(controller);
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(bearbeitenBtn);
+            buttonPanel.add(loeschenBtn);
             fragePanel.add(frageLabel, BorderLayout.CENTER);
             fragePanel.add(bearbeitenBtn, BorderLayout.LINE_END);
             fragenListe.add(fragePanel);
