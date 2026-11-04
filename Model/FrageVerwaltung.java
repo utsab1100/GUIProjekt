@@ -174,7 +174,7 @@ public class FrageVerwaltung {
     /**
      * Führt einen einfachen Test der grundlegenden Verwaltungsfunktionen aus.
      */
-    static void main() {
+    public static void main() {
         try {
             System.out.println(getFrageListe("assets/Fragen")[0]);
             System.out.println(getFrageListe("assets/Fragen")[1]);
