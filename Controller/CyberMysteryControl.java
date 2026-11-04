@@ -14,6 +14,7 @@ public class CyberMysteryControl implements ActionListener {
         model = new CyberMystery();
         view = new CyberMysteryPanel();
         frame = new CyberMysteryFrame(view);
+        model.datenLaden();
         view.getQuizbtn().addActionListener(this);
         view.getBacktomenu().addActionListener(this);
         view.getContinuebtn().addActionListener(this);
@@ -81,11 +82,15 @@ public class CyberMysteryControl implements ActionListener {
         } else if(ac.equals("Beenden")){
             System.exit(0);
         } else if (ac.equals("Verwaltung")) {
+            model.datenLaden();
             view.verwaltung(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(),this);
             view.getSpeicheBtn().addActionListener(this);
         } else if (ac.equals("Neue Frage speichern")) {
             String frage = view.getFrageEingabe().getText().trim();
             String antwort = view.getAntwortEingabe().getText().trim();
+            if(frage.trim().isEmpty() || antwort.trim().isEmpty()){
+                JOptionPane.showMessageDialog(view,"Bitte gib eine Frage un eine Antwort ein!","Fehlende Eingabe", JOptionPane.WARNING_MESSAGE);
+            }
             if (!frage.isEmpty() && !antwort.isEmpty()) {
                 if (view.getBearbeiteteFrage() == -1) {
                     model.frageHinzufuegen(frage, antwort);
