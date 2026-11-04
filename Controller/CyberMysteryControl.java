@@ -2,6 +2,7 @@ package GUIProjekt.Controller;
 import GUIProjekt.Model.CyberMystery;
 import GUIProjekt.View.CyberMysteryFrame;
 import GUIProjekt.View.CyberMysteryPanel;
+import GUIProjekt.View.QuizPanel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.*;
@@ -9,6 +10,7 @@ public class CyberMysteryControl implements ActionListener {
     private CyberMystery model;
     private CyberMysteryPanel view;
     private CyberMysteryFrame frame;
+    private QuizPanel quizView;
     private boolean bildModus = false;
     public CyberMysteryControl() {
         model = new CyberMystery();
@@ -16,8 +18,6 @@ public class CyberMysteryControl implements ActionListener {
         frame = new CyberMysteryFrame(view);
         model.datenLaden();
         view.getQuizbtn().addActionListener(this);
-        view.getBacktomenu().addActionListener(this);
-        view.getContinuebtn().addActionListener(this);
         view.getExitbtn().addActionListener(this);
         view.getVerwaltungsbtn().addActionListener(this);
         view.getMysterybtn().addActionListener(this);
@@ -29,50 +29,58 @@ public class CyberMysteryControl implements ActionListener {
         if (ac.equals("Quiz")) {
             this.model.quizReset();
             bildModus = false;
-            this.view.quizGame();
-            this.view.setAktuelleFrage(this.model.getAktuelleFrage());
-            this.view.setPunkte(this.model.getPunkte());
-            this.view.setFrageZaehler(1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
+            view.quizAnzeigen();
+            quizView = view.getQuizPanel();
+            quizView.getContinuebtn().addActionListener(this);
+            quizView.getBacktomenu().addActionListener(this);
+            quizView.setAktuelleFrage(model.getAktuelleFrage());
+            quizView.setPunkte(model.getPunkte());
+            quizView.setFrageZaehler(1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
         } else if (ac.equals("Antwort prüfen")) {
-            String eingabe = view.getEingabe().trim();
-            if(eingabe.isEmpty()){
-                JOptionPane.showMessageDialog(view,"Bitte gib eine Antwort ein!", "Leere Eingabe", JOptionPane.WARNING_MESSAGE);
+            String eingabe = quizView.getEingabe().trim();
+            if (eingabe.isEmpty()) {
+                JOptionPane.showMessageDialog(quizView, "Bitte gib eine Antwort ein!", "Leere Eingabe", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             boolean richtig;
             if (!bildModus) {
-                richtig = model.antwortPruefen(view.getEingabe());
+                richtig = model.antwortPruefen(eingabe);
             } else {
-                richtig = model.antwortPruefenBild(view.getEingabe());
+                richtig = model.antwortPruefenBild(eingabe);
             }
             if (richtig) {
                 model.richtigeAntwort();
             } else {
                 model.falscheAntwort();
             }
-            view.setPunkte(model.getPunkte());
-            view.farbeAenderung(richtig);
-            // Zuerst Textfragen
+            quizView.setPunkte(model.getPunkte());
+            quizView.farbeAenderung(richtig);
+            // Zuerst alle Textfragen durchgehen
             if (!bildModus) {
-                if (this.model.getAktuelleFrageNummer() < model.getAnzahlFragen() - 1) {
+                if (model.getAktuelleFrageNummer() < model.getAnzahlFragen() - 1) {
                     model.naechsteFrage();
-                    view.setAktuelleFrage(model.getAktuelleFrage());
-                    view.setFrageZaehler(model.getAktuelleFrageNummer() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
+                    quizView.setAktuelleFrage(model.getAktuelleFrage());
+                    quizView.setFrageZaehler(model.getAktuelleFrageNummer() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
                 } else {
-                    bildModus = true;
-                    model.quizBildStarten();
-                    view.zeigeBildfrage(model.getAktuelleBildfrage(), model.getBildaktuelleFrage());
-                    view.setFrageZaehler(model.getAnzahlFragen() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
+                    if (model.getAnzahlBildfragen() > 0) {
+                        bildModus = true;
+                        model.quizBildStarten();
+                        quizView.zeigeBildfrage(model.getAktuelleBildfrage(), model.getBildaktuelleFrage());
+                        quizView.setFrageZaehler(model.getAnzahlFragen() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
+                    } else {
+                        quizView.quizFertig();
+                        quizView.statistikAnzeigen(model.getAnzahlRichtigeAntworten(), model.getFalscheAntworten(), quizView.getSekunden());
+                    }
                 }
             } else {
                 // Bildfragen
                 if (model.getBildaktuelleFrage() < model.getAnzahlBildfragen() - 1) {
                     model.naechstesBild();
-                    view.zeigeBildfrage(model.getAktuelleBildfrage(), model.getBildaktuelleFrage());
-                    view.setFrageZaehler(model.getAnzahlFragen() + model.getBildaktuelleFrage() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
+                    quizView.zeigeBildfrage(model.getAktuelleBildfrage(), model.getBildaktuelleFrage());
+                    quizView.setFrageZaehler(model.getAnzahlFragen() + model.getBildaktuelleFrage() + 1, model.getAnzahlFragen() + model.getAnzahlBildfragen());
                 } else {
-                    view.quizFertig();
-                    view.statistikAnzeigen(model.getAnzahlRichtigeAntworten(), model.getFalscheAntworten(), view.getSekunden());
+                    quizView.quizFertig();
+                    quizView.statistikAnzeigen(model.getAnzahlRichtigeAntworten(), model.getFalscheAntworten(), quizView.getSekunden());
                     System.out.println("Quiz beendet –> Statistik wird geöffnet.");
                 }
             }
@@ -83,24 +91,25 @@ public class CyberMysteryControl implements ActionListener {
             System.exit(0);
         } else if (ac.equals("Verwaltung")) {
             model.datenLaden();
-            view.verwaltung(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(),this);
-            view.getSpeicheBtn().addActionListener(this);
-        } else if (ac.equals("Neue Frage speichern")) {
-            String frage = view.getFrageEingabe().getText().trim();
-            String antwort = view.getAntwortEingabe().getText().trim();
-            if(frage.trim().isEmpty() || antwort.trim().isEmpty()){
-                JOptionPane.showMessageDialog(view,"Bitte gib eine Frage un eine Antwort ein!","Fehlende Eingabe", JOptionPane.WARNING_MESSAGE);
-            }
-            if (!frage.isEmpty() && !antwort.isEmpty()) {
-                if (view.getBearbeiteteFrage() == -1) {
+            view.verwaltungAnzeigen(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(), this);
+        } else if (ac.equals("Neue Frage speichern") || ac.equals("Bildfrage speichern")) {
+            String frage = view.getVerwaltungPanel().getFrageEingabe().getText().trim();
+            String antwort = view.getVerwaltungPanel().getAntwortEingabe().getText().trim();
+            if (frage.isEmpty() || antwort.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Bitte gib eine Frage und eine Antwort ein!", "Fehlende Eingabe", JOptionPane.WARNING_MESSAGE);
+            } else {
+                int nummer = view.getVerwaltungPanel().getBearbeiteteFrage();
+                boolean bildfrage = view.getVerwaltungPanel().isBildfrageBearbeiten();
+                if (bildfrage) {
+                    model.bildfrageBearbeiten(nummer, frage, antwort);
+                } else if (nummer == -1) {
                     model.frageHinzufuegen(frage, antwort);
                 } else {
-                    model.frageBearbeiten(view.getBearbeiteteFrage(), frage, antwort);
-                    view.setBearbeiteteFrage(-1);
+                    model.frageBearbeiten(nummer, frage, antwort);
                 }
+                view.getVerwaltungPanel().setBearbeiteteFrage(-1);
                 model.datenSpeichern();
-                view.verwaltung(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(),this);
-                view.getSpeicheBtn().addActionListener(this);
+                view.verwaltungAnzeigen(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(), this);
             }
         } else if (ac.startsWith("Frage löschen:")) {
             String nummerText = ac.substring(14);
@@ -109,12 +118,19 @@ public class CyberMysteryControl implements ActionListener {
             if (auswahl == JOptionPane.YES_OPTION) {
                 model.frageLoeschen(nummer);
                 model.datenSpeichern();
-                view.verwaltung(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(), this);
-                view.getSpeicheBtn().addActionListener(this);
+                view.verwaltungAnzeigen(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(), this);
             }
-        } else if(ac.equals("Mystery")){
+        } else if (ac.startsWith("Bildfrage löschen:")) {
+            String nummerText = ac.substring(19);
+            int nummer = Integer.parseInt(nummerText);
+            int auswahl = JOptionPane.showConfirmDialog(view, "Bildfrage wirklich löschen?", "Bildfrage löschen", JOptionPane.YES_NO_OPTION);
+            if (auswahl == JOptionPane.YES_OPTION) {
+                model.datenSpeichern();
+                view.verwaltungAnzeigen(model.getFragen(), model.getRichtigeAntworten(), model.getBildfragen(), model.getRichtigeBildfragen(), this);
+            }
+        } else if (ac.equals("Mystery")) {
             System.out.println("Mystery Button wird gedrückt!");
-            view.fallErklaerung(this);
+            view.getMysteryPanel().fallErklaerung(this);
         } else if (ac.equals("Ermittlung starten")) {
             System.out.println("Mystery Button wird gedrückt!");
             view.mysteryGame();
