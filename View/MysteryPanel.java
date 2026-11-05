@@ -24,6 +24,5 @@ public class MysteryPanel extends JPanel {
         this.repaint();
     }
     public void fallErklaerung(ActionListener listener){
-
     }
 }
